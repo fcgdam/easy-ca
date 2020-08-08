@@ -97,7 +97,7 @@ $CA_DIR/csr/user-domain-com.client.csr
 The older create-client-o script will also create a client certificate but without the need of specifing a certificate name:
 
 ```
-$CA_DIR/bin/create-client-o -c user@domain.com 
+$CA_DIR/bin/create-client-o -c user@domain.com
 ```
 
 
@@ -136,5 +136,3 @@ These scripts are very simple, and make some hard-coded assumptions about behavi
 * Client and Server certificates have 4096-bit RSA keys and SHA512
 * Client and Server keys are never encrypted
 * There is no wrapper for renewing certificates
-
-

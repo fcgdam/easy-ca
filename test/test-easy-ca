@@ -54,6 +54,13 @@ function test::revoke_certificate() {
     -c ${SIGNING_CA_DIR}/certs/${certificate}
 }
 
+function test::usage() {
+  local scripts=( "${@}" )
+  for script in "${scripts[@]}"; do
+    ${SIGNING_CA_DIR}/bin/${script} -h
+  done
+}
+
 # -----------------------------------------------------------------------------
 # Main
 # -----------------------------------------------------------------------------
@@ -66,3 +73,11 @@ test::create_client_certificate
 test::revoke_certificate "star-acme-com.server.crt"
 test::revoke_certificate "ssl-acme-com.server.crt"
 test::revoke_certificate "bob-builder.client.crt"
+test::usage \
+  create-client \
+  create-client-o \
+  create-root-ca \
+  create-server \
+  create-signing-ca \
+  create-ssl \
+  revoke-cert

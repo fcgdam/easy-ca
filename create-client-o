@@ -1,27 +1,40 @@
 #!/bin/bash
 # Derek Moore <derek.moore@gmail.com>
 
+# -----------------------------------------------------------------------------
+# Globals
+# -----------------------------------------------------------------------------
+declare -g SCRIPT=${0##*/}
+
 function usage() {
-    echo "Usage: $0 -c CLIENT_NAME"
-    echo "Issues a client certificate for CLIENT_NAME"
-    echo
-    echo "Options:"
-    echo "    -c CLIENT_NAME  Client name (commonName) for the new cert"
-    echo
-    exit 2
+  local exit_code=${1:-1}
+
+  cat <<USAGE
+
+  Usage:
+    ${SCRIPT} -c CLIENT_NAME
+
+  Issues a client certificate for CLIENT_NAME
+
+  Options:
+    -c CLIENT_NAME  Client name (commonName) for the new cert
+
+USAGE
+  exit ${exit_code}
 }
 
 CLIENT_NAME=
 
-while getopts c: FLAG; do
+while getopts hc: FLAG; do
     case $FLAG in
         c) CLIENT_NAME=${OPTARG} ;;
-        *) usage ;;
+        h) usage 0;;
+        *) usage 1;;
     esac
 done
 
 if [ "${CLIENT_NAME}" == "" ]; then
-    usage
+    usage 1
 fi
 
 BIN_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )

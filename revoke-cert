@@ -11,29 +11,37 @@ set -o pipefail
 # -----------------------------------------------------------------------------
 # Global
 # -----------------------------------------------------------------------------
+declare -g SCRIPT=${0##*/}
 declare -x SAN=${SAN:-}
 
-usage() {
-    echo "Usage: $0 -c CERT"
-    echo "Revokes a certificate issued by this CA"
-    echo
-    echo "Options:"
-    echo "    -c CERT  Path the the certificate file to be revoked"
-    echo
-    exit 2
+function usage() {
+  local exit_code=${1:-1}
+  cat <<USAGE
+
+  Usage: 
+    ${SCRIPT} -c CERT
+  
+  Revokes a certificate issued by this CA
+
+  Options:
+    -c CERT  Path the the certificate file to be revoked
+
+USAGE
+  exit ${exit_code}
 }
 
 CERT=
 
-while getopts c: FLAG; do
+while getopts hc: FLAG; do
     case $FLAG in
         c) CERT=${OPTARG} ;;
-        *) usage ;;
+        h) usage 0 ;;
+        *) usage 1 ;;
     esac
 done
 
 if [ "${CERT}" == "" ]; then
-    usage
+    usage 1
 fi
 
 BIN_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )

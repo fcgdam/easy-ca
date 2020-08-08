@@ -11,30 +11,37 @@ set -o pipefail
 # -----------------------------------------------------------------------------
 # Globals
 # -----------------------------------------------------------------------------
+declare -g SCRIPT=${0##*/}
 declare -x SAN=${SAN:-}
 
-
 function usage() {
-    echo "Usage: $0 -d CA_DIR"
-    echo "Initializes a new root CA in CA_DIR"
-    echo
-    echo "Options:"
-    echo "    -d CA_DIR  Target directory to be created and initialized"
-    echo
-    exit 2
+  local exit_code=${1:-1}
+  cat <<USAGE
+
+  Usage:
+    ${SCRIPT} -d CA_DIR
+
+  Initializes a new root CA in CA_DIR
+
+  Options:
+    -d CA_DIR  Target directory to be created and initialized
+
+USAGE
+  exit ${exit_code}
 }
 
 CA_DIR=
 
-while getopts d: FLAG; do
+while getopts hd: FLAG; do
     case $FLAG in
         d) CA_DIR=${OPTARG} ;;
-        *) usage ;;
+        h) usage 0;;
+        *) usage 1;;
     esac
 done
 
 if [ "${CA_DIR}" == "" ]; then
-    usage
+    usage 1
 fi
 
 BIN_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
